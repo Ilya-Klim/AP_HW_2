@@ -126,8 +126,8 @@ async def cmd_log_water(message: Message):
 @router.message(Command("log_food"))
 async def cmd_log_food(message: Message, state: FSMContext):
     user_id = message.from_user.id
-    args = message.text.split()
-    if len(args) != 2:
+    args = message.text.split(maxsplit=1)
+    if len(args) < 2:
         await message.reply(
             "Некорректный ввод! Укажите название продукта как в примере:\n"
             "/log_food банан"
