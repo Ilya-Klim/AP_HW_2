@@ -119,8 +119,8 @@ async def cmd_log_water(message: Message):
 
     await message.reply(
         f"Записан прием воды.\n"
-        f"На сегодня выпито {user["logged_water"] } мл воды.\n"
-        f"Осталось выпить {estimated_water} мл воды до выполнения нормы {user["water_goal"]}."
+        f"На сегодня выпито {user['logged_water'] } мл воды.\n"
+        f"Осталось выпить {estimated_water} мл воды до выполнения нормы {user['water_goal']}."
     )
 
 @router.message(Command("log_food"))
@@ -170,7 +170,7 @@ async def food_calories(message: Message, state: FSMContext):
         users[user_id]["logged_calories"] += total_calories
         await message.reply(f"Записано: {total_calories:.1f} ккал.")
     except ValueError:
-        await message.reply("Пожалуйста, корректное количество граммов.")
+        await message.reply("Введите корректное количество граммов.")
 
     await state.clear()
 
@@ -199,7 +199,7 @@ async def cmd_log_workout(message: Message):
     if activity_name.isdigit():
         await message.reply(
             "Некорректный ввод названия активности! Пример:\n"
-            "/log_workout бег 30"
+            "/log_workout бег 60"
         )
         return
 
