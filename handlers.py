@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.types import Message
+from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from states import *
@@ -25,6 +25,7 @@ async def cmd_help(message: Message):
         "/log_food <название продукта> - Добавить съеденный продукт и его калорийность\n"
         "/log_workout <тип тренировки> <время, мин> - Добавить запись о проведенной тренировки\n"
         "/check_progress - Посмотреть прогресс\n"
+        "/show_progress - Посмотреть прогресс графически\n"
         "/help - Помощь\n"
     )
 
@@ -87,8 +88,8 @@ async def profile_city(message: Message, state: FSMContext):
     await message.reply(
         f"Ваш профиль заполнен!\n"
         f"Ваш вес: {weight} кг\nВаш рост: {height} см\nВаш возраст: {age} лет\n"
-        f"Ваша активность: {activity} минут\nВаш город: {city}\n")
-        f"Цель по воде: {water_goal}\nЦель по калориям: {calorie_goal}"
+        f"Ваша активность: {activity} минут\nВаш город: {city}\n"
+        f"Цель по воде: {user['water_goal']} мл\nЦель по калориям: {user['calorie_goal']} ккал")
     await state.clear()
 
 @router.message(Command("log_water"))
@@ -117,6 +118,7 @@ async def cmd_log_water(message: Message):
     user = users[user_id]
     user["logged_water"] = user.get("logged_water", 0) + water_amount
     estimated_water = max(0, user["water_goal"] - user["logged_water"])
+
     await message.reply(
         f"Записан прием воды.\n"
         f"На сегодня выпито {user['logged_water'] } мл воды.\n"
@@ -199,7 +201,7 @@ async def cmd_log_workout(message: Message):
     if activity_name.isdigit():
         await message.reply(
             "Некорректный ввод названия активности! Пример:\n"
-            "/log_workout бег 60"
+            "/log_workout бег 30"
         )
         return
 
@@ -230,3 +232,22 @@ async def check_progress(message: Message):
         f"- Сожжено: {users[user_id]['burned_calories']} ккал"
         f"- Баланс: {users[user_id]['logged_calories'] - users[user_id]['burned_calories']} ккал\n"
     )
+
+@router.message(Command("show_progress"))
+async def show_progress(message: Message):
+    user_id = message.from_user.id
+
+    if user_id not in users:
+        await message.reply("Сначала настройте профиль с помощью команды /set_profile.")
+        return
+
+    user_data = users[user_id]
+    file_path = generate_progress_graphs(user_id, user_data)
+
+    try:
+        photo = FSInputFile(file_path)
+        await message.answer_photo(photo, caption="Ваш прогресс по воде и калориям.")
+    finally:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+

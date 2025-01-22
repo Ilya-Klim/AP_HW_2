@@ -4,3 +4,4 @@ aiohttp==3.*
 asyncio==3.*
 typing==3.*
 python-dotenv==1.0.1
+matplotlib==3.*
