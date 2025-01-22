@@ -1,0 +1,6 @@
+aiogram==3.*
+numpy==2.*
+aiohttp==3.*
+asyncio==3.*
+typing==3.*
+python-dotenv==1.0.1
