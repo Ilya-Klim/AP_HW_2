@@ -129,6 +129,10 @@ async def cmd_log_water(message: Message):
 async def cmd_log_food(message: Message, state: FSMContext):
     user_id = message.from_user.id
     args = message.text.split(maxsplit=1)
+    if user_id not in users:
+        await message.reply("Сначала настройте профиль с помощью команды /set_profile.")
+        return
+
     if len(args) < 2:
         await message.reply(
             "Некорректный ввод! Укажите название продукта как в примере:\n"
@@ -180,6 +184,9 @@ async def food_calories(message: Message, state: FSMContext):
 async def cmd_log_workout(message: Message):
     user_id = message.from_user.id
     args = message.text.split()
+    if user_id not in users:
+        await message.reply("Сначала настройте профиль с помощью команды /set_profile.")
+        return
     if len(args) != 3:
         await message.reply(
             "Некорректный ввод! Укажите тип и время активности согласно формату примера:\n"
@@ -187,8 +194,8 @@ async def cmd_log_workout(message: Message):
         )
         return
 
-    activity_name = args[1]
-    activity_time = args[2]
+    activity_name = ''.join(args[1:-1]).strip()
+    activity_time = args[-1].strip()
     if not activity_time.isdigit():
         await message.reply(
             "Некорректный ввод времени активности! Укажите как в примере в мин:\n"
