@@ -87,7 +87,8 @@ async def profile_city(message: Message, state: FSMContext):
     await message.reply(
         f"Ваш профиль заполнен!\n"
         f"Ваш вес: {weight} кг\nВаш рост: {height} см\nВаш возраст: {age} лет\n"
-        f"Ваша активность: {activity} минут\nВаш город: {city}")
+        f"Ваша активность: {activity} минут\nВаш город: {city}\n")
+        f"Цель по воде: {water_goal}\nЦель по калориям: {calorie_goal}"
     await state.clear()
 
 @router.message(Command("log_water"))
@@ -116,7 +117,6 @@ async def cmd_log_water(message: Message):
     user = users[user_id]
     user["logged_water"] = user.get("logged_water", 0) + water_amount
     estimated_water = max(0, user["water_goal"] - user["logged_water"])
-
     await message.reply(
         f"Записан прием воды.\n"
         f"На сегодня выпито {user['logged_water'] } мл воды.\n"
