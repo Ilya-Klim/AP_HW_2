@@ -31,32 +31,52 @@ async def cmd_help(message: Message):
 
 @router.message(Command("set_profile"))
 async def cmd_set_profile(message: Message, state: FSMContext):
-    await message.reply("Введите ваш вес (в кг):\n")
-    await state.set_state(ProfileForm.weight)
+    try:
+        await message.reply("Введите ваш вес (в кг):\n")
+        await state.set_state(ProfileForm.weight)
+    except Exception:
+        await message.reply("Произошла ошибка. Попробуйте /set_profile еще раз")
+        await state.clear()
 
 @router.message(ProfileForm.weight)
 async def cmd_set_profile_weight(message: Message, state: FSMContext):
-    await state.update_data(weight=float(message.text))
-    await message.reply("Введите ваш рост (в см):\n")
-    await state.set_state(ProfileForm.height)
+    try:
+        await state.update_data(weight=float(message.text))
+        await message.reply("Введите ваш рост (в см):\n")
+        await state.set_state(ProfileForm.height)
+    except Exception:
+        await message.reply("Произошла ошибка. Попробуйте /set_profile еще раз")
+        await state.clear()
 
 @router.message(ProfileForm.height)
 async def cmd_set_profile_age(message: Message, state: FSMContext):
-    await state.update_data(height=float(message.text))
-    await message.reply("Введите ваш возраст:\n")
-    await state.set_state(ProfileForm.age)
+    try:
+        await state.update_data(height=float(message.text))
+        await message.reply("Введите ваш возраст:\n")
+        await state.set_state(ProfileForm.age)
+    except Exception:
+        await message.reply("Произошла ошибка. Попробуйте /set_profile еще раз")
+        await state.clear()
 
 @router.message(ProfileForm.age)
 async def profile_activity(message: Message, state: FSMContext):
-    await state.update_data(age=float(message.text))
-    await message.reply("Сколько минут активности у вас в день?\n")
-    await state.set_state(ProfileForm.activity)
+    try:
+        await state.update_data(age=float(message.text))
+        await message.reply("Сколько минут активности у вас в день?\n")
+        await state.set_state(ProfileForm.activity)
+    except Exception:
+        await message.reply("Произошла ошибка. Попробуйте /set_profile еще раз")
+        await state.clear()
 
 @router.message(ProfileForm.activity)
 async def profile_activity(message: Message, state: FSMContext):
-    await state.update_data(activity=float(message.text))
-    await message.reply("В каком городе вы находитесь?\n")
-    await state.set_state(ProfileForm.city)
+    try:
+        await state.update_data(activity=float(message.text))
+        await message.reply("В каком городе вы находитесь?\n")
+        await state.set_state(ProfileForm.city)
+    except Exception:
+        await message.reply("Произошла ошибка. Попробуйте /set_profile еще раз")
+        await state.clear()
 
 @router.message(ProfileForm.city)
 async def profile_city(message: Message, state: FSMContext):

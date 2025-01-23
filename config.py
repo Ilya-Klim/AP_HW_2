@@ -2,9 +2,8 @@ import os
 from dotenv import load_dotenv
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
-aiohttp_logger = logging.getLogger("aiohttp")
-aiohttp_logger.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
+logging.getLogger("aiogram.event").setLevel(logging.WARNING) # увеличивает минимальный уровень логов только для aiogram.event до WARNING, исключая INFO и DEBUG. Сделал, потому что в примере логи были без них
 load_dotenv()
 
 TOKEN = os.getenv('BOT_TOKEN')
